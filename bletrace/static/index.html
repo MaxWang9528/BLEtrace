@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bletrace</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="bar">
+  <h1 class="brand">bletrace</h1>
+  <div class="capture-pick">
+    <label for="capture" class="sr">Capture</label>
+    <select id="capture"></select>
+    <button id="rename" class="ghost" title="Rename capture">Rename</button>
+    <button id="delete" class="ghost" title="Delete capture">Delete</button>
+  </div>
+  <div class="actions">
+    <button id="pull" class="primary">Pull capture from iPhone</button>
+    <button id="pull-luma">Pull Luma log</button>
+    <button id="open">Open file…</button>
+    <input id="file" type="file" accept=".pklg,.log,.btsnoop,.cfa,.txt" hidden>
+    <a id="export" class="button" href="#" download>Export CSV</a>
+    <span id="phone" class="phone" title="iPhone connection">Checking iPhone…</span>
+  </div>
+</header>
+
+<section class="strip" aria-label="Packet timeline overview">
+  <canvas id="strip"></canvas>
+  <div id="strip-tip" class="strip-tip" hidden></div>
+</section>
+
+<main class="work">
+  <aside class="side" aria-label="Filters">
+    <div class="side-block">
+      <h2>Show</h2>
+      <label><input type="checkbox" data-show="values" checked> Writes and notifications</label>
+      <label><input type="checkbox" data-show="reads"> Reads, discovery, MTU</label>
+      <label><input type="checkbox" data-show="link" checked> Connects and disconnects</label>
+      <label><input type="checkbox" data-show="notes"> Log notes</label>
+      <label><input type="checkbox" id="dedupe"> Hide repeats of the same packet</label>
+      <label class="inline">Gap marker after
+        <select id="gap">
+          <option value="0.5">0.5 s</option>
+          <option value="1" selected>1 s</option>
+          <option value="2">2 s</option>
+          <option value="5">5 s</option>
+        </select>
+      </label>
+      <input id="search" type="search" placeholder="Find bytes or text, e.g. A0 11" autocomplete="off">
+      <div id="group-filter" class="group-filter" hidden>
+        <span></span><button class="ghost" id="clear-group">Clear</button>
+      </div>
+    </div>
+    <div class="side-block">
+      <h2>Devices</h2>
+      <div id="devices" class="list"></div>
+    </div>
+    <div class="side-block grow">
+      <h2>Characteristics</h2>
+      <p class="hint">Double-click a name to label it.</p>
+      <div id="handles" class="list"></div>
+    </div>
+  </aside>
+
+  <section class="center">
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="timeline" aria-selected="true">Timeline</button>
+      <button role="tab" data-tab="patterns" aria-selected="false">Byte patterns</button>
+      <span id="count" class="count"></span>
+    </nav>
+    <div id="timeline" class="timeline" tabindex="0" aria-label="Packets">
+      <div class="thead">
+        <span>#</span><span>Time</span><span>Δ</span><span></span><span>Device</span><span>Operation</span><span>Characteristic</span><span>Bytes</span>
+      </div>
+      <div id="rows-viewport" class="viewport"><div id="rows-spacer"></div><div id="rows"></div></div>
+    </div>
+    <div id="patterns" class="patterns" hidden></div>
+    <div id="empty" class="empty" hidden></div>
+  </section>
+
+  <aside class="detail" id="detail" aria-label="Packet detail">
+    <p class="hint">Select a packet to inspect its bytes.</p>
+  </aside>
+</main>
+
+<div id="job" class="job" hidden role="status" aria-live="polite">
+  <h2 id="job-title">Pulling from iPhone</h2>
+  <ol id="job-log"></ol>
+  <button id="job-close" class="ghost" hidden>Close</button>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
